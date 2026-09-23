@@ -1,25 +1,38 @@
+// Interface für meine rent rückgabe
+export interface RentalResult {
+    name: string;
+    price: number;
+};
+
 // Hauptklasse der Fahrzeuge
-class Vehicles{
+export class Vehicles{
     constructor(
         public name: string,
         public readonly id: string,
         public condidtion: string,
         protected pricePerMinute: number,
         public availability: string,
-    ){}
+    ){};
     
     //Miet Methode = Avail. Check und Preisausgabe
-    rent(minutes: number): number {
+    rent(minutes: number): RentalResult {
         if (this.availability !== "Free") {
             throw new Error("This Vehicle is currently in use");
         }
         this.availability = "In use";
-        return minutes * this.pricePerMinute;
+        return { name: this.name, price: minutes * this.pricePerMinute };
+    };
+    //Returnmethode aller fahrzeuge
+    returnVehicle(){
+        if (this.availability !== "In use"){
+            throw new Error("This Vehicle has not been rented yet!")
+        }
+        this.availability = "Free";
     }
 }
 
 // Erste Unterklasse für alle E-Fahrzeuge
-class EVehicles extends Vehicles {
+export class EVehicles extends Vehicles {
     constructor(
         name: string,
         id: string,
@@ -31,24 +44,31 @@ class EVehicles extends Vehicles {
         super(name, id,condition,pricePerMinute,availability);
     }
     //Miet Methode = avail. check, preisausgabe,battarylevel check
-    rent(minutes: number): number{
+    rent(minutes: number): RentalResult{
         if (this.batteryLevel < 30){
             throw new Error("This Vehicle is unavailable due to insufficient charge");
         }
-        return super.rent(minutes);
+        const price = super.rent(minutes);
+        this.batteryLevel -= minutes;
+        return price;
+    }
+    //Returnmethode alle E fahrzeuge mit voll ladung
+    returnVehicle(){
+        super.returnVehicle();
+        this.batteryLevel = 100;
     }
 
 }
     // Unterklassen der Fahrzeugtypen
-    class EScooter extends EVehicles{}
-    class EBike extends EVehicles{}
-    class ECar extends EVehicles{}
+    export class EScooter extends EVehicles{}
+    export class EBike extends EVehicles{}
+    export class ECar extends EVehicles{}
 
 // Zweite Unterklasse für alle nicht E-Fahrzeuge
-class EcoVehicles extends Vehicles {}
+export class EcoVehicles extends Vehicles {}
 
     // Unterklassen der Fahrzeugtypen
-    class Bike extends EcoVehicles {}
+    export class Bike extends EcoVehicles {}
 
 
 // Array mit allein verfügbaren Fahrzeugen
@@ -62,29 +82,3 @@ const vehicles: Vehicles[] = [
     new Bike("Bike 1", "007", "New", 0.20, "Free"),
     new Bike("Bike 2", "008", "New", 0.20, "Free")
 ];
-
-//testumgebung
-
-try {
-    const vehicle = vehicles[0];
-    if (vehicle){
-        console.log(vehicle.rent(30));
-    } else {
-        console.log("Kein fahrzeug mit dem index gefunden");
-        } 
-    }
-    catch (error){
-    console.log("Fehler:", (error as Error).message);
-};
-
-try {
-    const vehicle = vehicles[0];
-    if (vehicle){
-        console.log(vehicle.rent(30));
-    } else {
-        console.log("Kein fahrzeug mit dem index gefunden");
-        } 
-    }
-    catch (error){
-    console.log("Fehler:", (error as Error).message);
-};
