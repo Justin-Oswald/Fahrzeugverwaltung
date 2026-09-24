@@ -69,16 +69,4 @@ export class EcoVehicles extends Vehicles {}
 
     // Unterklassen der Fahrzeugtypen
     export class Bike extends EcoVehicles {}
-
-
-// Array mit allein verfügbaren Fahrzeugen
-const vehicles: Vehicles[] = [
-    new EBike("EBike 1", "001", "New", 0.20, "Free", 100),
-    new EBike("EBike 2", "002", "New", 0.20, "Free", 100),
-    new ECar("ECar 1", "003", "New", 0.20, "Free", 100),
-    new ECar("ECar 2", "004", "New", 0.20, "Free", 100),
-    new EScooter("EScooter 1", "005", "New", 0.20, "Free", 100),
-    new EScooter("EScooter 2", "006", "New", 0.20, "Free", 100),
-    new Bike("Bike 1", "007", "New", 0.20, "Free"),
-    new Bike("Bike 2", "008", "New", 0.20, "Free")
-];
+    
